@@ -29,16 +29,33 @@ class Tiles {
 
 let winState
 let boardSize
+let board
 
 
 function init() {
     winState = null
     boardSize = 16
+    board = []
     createTiles()
     render()
 }
 
 function createTiles() {
+    for (let i = 0; i < boardSize; i++) {
+        board.push([])
+    }
+    // console.log("This is board after createTiles:", board)
+}
+
+function renderBoard() {
+
+}
+
+function renderMessage() {
+
+}
+
+function renderButton() {
 
 }
 
@@ -47,3 +64,8 @@ function render() {
     renderMessage()
     renderButton()
 }
+
+
+
+
+init()
