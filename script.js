@@ -17,3 +17,33 @@
     // if there are only mine tiles left covered, return a win
 
 // Allow the player to play again with a button
+
+class Tiles {
+    constructor(pos) {
+        this.pos = pos
+        this.hidden = true
+        this.mine = false
+        this.div = document.createElement("div")
+    }
+}
+
+let winState
+let boardSize
+
+
+function init() {
+    winState = null
+    boardSize = 16
+    createTiles()
+    render()
+}
+
+function createTiles() {
+
+}
+
+function render() {
+    renderBoard()
+    renderMessage()
+    renderButton()
+}
