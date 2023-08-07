@@ -43,27 +43,19 @@ class Tiles {
 /* ---- Variables ----- */
 
 let winState
-let boardSize
-let mines
+let boardSize = 16
+let numOfMines
 let board
 
 /* ---- Cached Elements ----*/
 
 const boardEl = document.getElementById("board")
 const messageEl = document.getElementById("message")
-const buttonEl = document.getElementById("play")
-
-// const testTile = new Tiles(0, 0)
-// console.log("This is the testTile", testTile)
-// console.log("This is the boardEl", boardEl)
-// testTile.div.innerText = "Look at me"
-// boardEl.appendChild(testTile.div)
+const controlsEl = document.getElementById("controls")
 
 /* ---- Functions ----- */
 
 function init() {
-    boardSize = 16
-    mines = 40
     board = []
     boardEl.innerHTML = ""
     createTiles()
@@ -71,11 +63,26 @@ function init() {
     render()
 }
 
-function play() {
+function startGame(event) {
+    // Return if it was not a button that was clicked
+    if (event.target.tagName !== "BUTTON") return
+    // Allow the game to start by setting winState to null
     winState = null
+    // Check for which difficulty was selected
+    if (event.target.innerText.toLowerCase() === "beginner") {
+        boardSize = 9
+        numOfMines = 10
+    } else {
+        boardSize = 16
+        numOfMines = 40
+    }
+    // Start and render the game
     init()
 }
 
+// Creates each individual tile on the board
+// Stores them in the board array at an index matching their position
+// Should only be called on page load and game start
 function createTiles() {
     // For loop creates an empty array for each column
     // Uses boardSize to determine # of columns
@@ -94,8 +101,6 @@ function createTiles() {
     // After all tiles are created, arrange them into a CSS grid with rows and columns === to boardSize
     boardEl.style.gridTemplateRows = `repeat(${boardSize}, 1fr)`
     boardEl.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`
-    // console.log("This is board after createTiles:", board)
-    // console.log("This is the last tile after createTiles:", board[boardSize-1][boardSize-1])
 }
 
 function placeMines() {
@@ -115,7 +120,7 @@ function renderMessage() {
     // Message should change to show the number of mines remaining while winState is null
     // Message should change to a win message on win and a loss message on loss
     if (winState === null) {
-        messageEl.innerText = `Mines: ${mines}`
+        messageEl.innerText = `Mines: ${numOfMines}`
     } else if (winState === "w") {
         messageEl.innerText = "You won! Play again?"
     } else if (winState === "l") {
@@ -140,7 +145,6 @@ function handleClick(event) {
         const clickedCol = board.find(column => column.find(tile => tile.div === event.target))
         // Find the event target within the found array
         const clickedTile = clickedCol.find(tile => tile.div ===  event.target)
-        // console.log("This is the object containing the click target", clickedCol.find(tile => tile.div === event.target))
         // Check if the tile is a mine, and return with a loss if it is
         if (clickedTile.mine === true) {
             winState = "l"
@@ -155,18 +159,25 @@ function handleClick(event) {
         if (clickedTile.adjacentMines) clickedTile.div.innerText = `${clickedTile.adjacentMines}`
         // Otherwise cascade
         else cascade(clickedTile.col, clickedTile.row)
+        // Check for winner after the click is handled, then update the board
+        checkWinner()
+        render()
     }
 }
 
 function countAdjacent(col, row) {
     return Math.floor(Math.random() * 9)
-    //Code to count the adjacent number of mines for a given tile
+    // Code to count the adjacent number of mines for a given tile
+}
+
+function checkWinner() {
+    // Code to check if all non-mine tiles have been revealed
 }
 
 /* ---- Event Listeners ----- */
 
 boardEl.addEventListener("click", handleClick)
-buttonEl.addEventListener("click", play)
+controlsEl.addEventListener("click", startGame)
 
 
 
