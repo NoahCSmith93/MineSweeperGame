@@ -44,7 +44,7 @@ const boardEl = document.getElementById("board")
 
 function init() {
     winState = null
-    boardSize = 4
+    boardSize = 16
     board = []
     createTiles()
     render()
