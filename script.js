@@ -18,6 +18,8 @@
 
 // Allow the player to play again with a button
 
+/* ---- Classes ----- */
+
 // Class for creating object tiles
 // Each one contains a row and column identifier, gamestate properties, and a new HTML div
 class Tiles {
@@ -29,6 +31,8 @@ class Tiles {
         this.div = document.createElement("div")
     }
 }
+
+/* ---- Variables ----- */
 
 let winState
 let boardSize
@@ -42,10 +46,13 @@ const boardEl = document.getElementById("board")
 // testTile.div.innerText = "Look at me"
 // boardEl.appendChild(testTile.div)
 
+/* ---- Functions ----- */
+
 function init() {
     winState = null
     boardSize = 16
     board = []
+    boardEl.innerHTML = ""
     createTiles()
     render()
 }
@@ -66,8 +73,8 @@ function createTiles() {
     // After all tiles are created, arrange them into a CSS grid with rows and columns === to boardSize
     boardEl.style.gridTemplateRows = `repeat(${boardSize}, 1fr)`
     boardEl.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`
-    console.log("This is board after createTiles:", board)
-    console.log("This is the first tile after createTiles:", board[0][0])
+    // console.log("This is board after createTiles:", board)
+    // console.log("This is the last tile after createTiles:", board[boardSize-1][boardSize-1])
 }
 
 function renderBoard() {
@@ -77,11 +84,13 @@ function renderBoard() {
 }
 
 function renderMessage() {
-
+    // Message should change to show the number of mines remaining while winState is null
+    // Message should change to a win message on win and a loss message on loss
 }
 
 function renderButton() {
-
+    // Code for hiding the buttons while the game is active
+    // Buttons should be hidden as long as winState is null
 }
 
 function render() {
@@ -89,6 +98,18 @@ function render() {
     renderMessage()
     renderButton()
 }
+
+function handleClick(event) {
+    // Find the column array containing the event target
+    const clickedCol = board.find(column => column.find(tile => tile.div ===  event.target))
+    // Find the event target within the found array
+    const clickedTile = clickedCol.find(tile => tile.div ===  event.target)
+    console.log("This is the object containing the click target", clickedCol.find(tile => tile.div ===  event.target))
+}
+
+/* ---- Event Listeners ----- */
+
+boardEl.addEventListener("click", handleClick)
 
 
 
