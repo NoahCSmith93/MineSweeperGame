@@ -71,6 +71,11 @@ function init() {
     render()
 }
 
+function play() {
+    winState = null
+    init()
+}
+
 function createTiles() {
     // For loop creates an empty array for each column
     // Uses boardSize to determine # of columns
@@ -82,7 +87,8 @@ function createTiles() {
         for (let j = 0; j < boardSize; j++) {
             board[i].push(new Tiles(i, j))
             boardEl.appendChild(board[i][j].div)
-            board[i][j].hide()
+            // If statement to prevent tiles from appearing clickable until the game has started
+            if (winState === null) board[i][j].hide()
         }
     }
     // After all tiles are created, arrange them into a CSS grid with rows and columns === to boardSize
@@ -101,8 +107,8 @@ function placeMines() {
     // While loop to repeat until the mine cap has been filled
 }
 
-function renderBoard() {
-    // Code to render the board
+function cascade(col, row) {
+    // Code to cascade empty tiles
 }
 
 function renderMessage() {
@@ -123,37 +129,44 @@ function renderButton() {
 }
 
 function render() {
-    renderBoard()
     renderMessage()
     renderButton()
 }
 
 function handleClick(event) {
-    // Find the column array containing the event target
-    const clickedCol = board.find(column => column.find(tile => tile.div === event.target))
-    // Find the event target within the found array
-    const clickedTile = clickedCol.find(tile => tile.div ===  event.target)
-    console.log("This is the object containing the click target", clickedCol.find(tile => tile.div === event.target))
-    // Check if the tile is a mine, and return with a loss if it is
-    if (clickedTile.mine === true) {
-        winState = "l"
-        render()
-        return
+    // Do not respond to a click unless the game is active
+    if (winState === null) {
+        // Find the column array containing the event target
+        const clickedCol = board.find(column => column.find(tile => tile.div === event.target))
+        // Find the event target within the found array
+        const clickedTile = clickedCol.find(tile => tile.div ===  event.target)
+        // console.log("This is the object containing the click target", clickedCol.find(tile => tile.div === event.target))
+        // Check if the tile is a mine, and return with a loss if it is
+        if (clickedTile.mine === true) {
+            winState = "l"
+            render()
+            return
+        }
+        // Reveal the tile
+        clickedTile.unhide()
+        // Count the adjacent mines and assign them to the object
+        clickedTile.adjacentMines = countAdjacent(clickedTile.col, clickedTile.row)
+        // Display the # of adjacent mines as inner text if it's more than 0
+        if (clickedTile.adjacentMines) clickedTile.div.innerText = `${clickedTile.adjacentMines}`
+        // Otherwise cascade
+        else cascade(clickedTile.col, clickedTile.row)
     }
-    // Reveal the tile
-    clickedTile.unhide()
-    // Count the adjacent mines and assign them to the object
-    clickedTile.adjacentMines = countAdjacent(clickedTile.col, clickedTile.row)
 }
 
 function countAdjacent(col, row) {
+    return Math.floor(Math.random() * 9)
     //Code to count the adjacent number of mines for a given tile
 }
 
 /* ---- Event Listeners ----- */
 
 boardEl.addEventListener("click", handleClick)
-buttonEl.addEventListener("click", init)
+buttonEl.addEventListener("click", play)
 
 
 
