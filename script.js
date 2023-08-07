@@ -18,7 +18,8 @@
 
 // Allow the player to play again with a button
 
-
+// Class for creating object tiles
+// Each one contains a row and column identifier, gamestate properties, and a new HTML div
 class Tiles {
     constructor(col, row) {
         this.row = row
@@ -33,20 +34,40 @@ let winState
 let boardSize
 let board
 
+const boardEl = document.getElementById("board")
+
+// const testTile = new Tiles(0, 0)
+// console.log("This is the testTile", testTile)
+// console.log("This is the boardEl", boardEl)
+// testTile.div.innerText = "Look at me"
+// boardEl.appendChild(testTile.div)
 
 function init() {
     winState = null
-    boardSize = 16
+    boardSize = 4
     board = []
     createTiles()
     render()
 }
 
 function createTiles() {
+    // For loop creates an empty array for each column
+    // Uses boardSize to determine # of columns
     for (let i = 0; i < boardSize; i++) {
         board.push([])
+        // Nested for loop creates boardSize # of Tiles objects in each column array
+        // each Tiles object contains a div that gets appended to the HTML board
+        // column and row identifiers inside the object are set using the iterators
+        for (let j = 0; j < boardSize; j++) {
+            board[i].push(new Tiles(i, j))
+            boardEl.appendChild(board[i][j].div)
+        }
     }
-    // console.log("This is board after createTiles:", board)
+    // After all tiles are created, arrange them into a CSS grid with rows and columns === to boardSize
+    boardEl.style.gridTemplateRows = `repeat(${boardSize}, 1fr)`
+    boardEl.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`
+    console.log("This is board after createTiles:", board)
+    console.log("This is the first tile after createTiles:", board[0][0])
 }
 
 function renderBoard() {
