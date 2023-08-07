@@ -18,9 +18,11 @@
 
 // Allow the player to play again with a button
 
+
 class Tiles {
-    constructor(pos) {
-        this.pos = pos
+    constructor(col, row) {
+        this.row = row
+        this.col = col
         this.hidden = true
         this.mine = false
         this.div = document.createElement("div")
@@ -48,7 +50,9 @@ function createTiles() {
 }
 
 function renderBoard() {
-
+    board.forEach((column) => {
+        column
+    })
 }
 
 function renderMessage() {
