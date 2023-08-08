@@ -24,8 +24,8 @@
 // Each one contains a row and column identifier, gamestate properties, and a new HTML div
 class Tiles {
     constructor(col, row) {
-        this.row = row
         this.col = col
+        this.row = row
         this.hidden = true
         this.mine = false
         this.div = document.createElement("div")
@@ -52,6 +52,8 @@ let board
 const boardEl = document.getElementById("board")
 const messageEl = document.getElementById("message")
 const controlsEl = document.getElementById("controls")
+const mineImg = document.createElement("img")
+mineImg.src = "/Images/Mine.png"
 
 /* ---- Functions ----- */
 
@@ -114,19 +116,14 @@ function placeMines() {
     let randomCol = Math.floor(Math.random() * boardSize)
     let randomRow = Math.floor(Math.random() * boardSize)
     // Check that the chosen tile doesn't have a mine already
-    if (!board[randomCol][randomRow].mine) {
-        // Set the corresponding tile object's mine property to true
-        board[randomCol][randomRow].mine = true
-        // While loop to repeat until the mine cap has been filled
-        minesRemaining--
-
-        // console.log("placeMines ran and the selected object is", board[randomCol][randomRow])
-        // console.log("minesRemaining is now", minesRemaining)
-    }
-    // else {
-    //     console.log("placeMines selected an object that already had a mine", board[randomCol][randomRow])
-    //     console.log("minesRemaining is still", minesRemaining)
-    // }
+        if (!board[randomCol][randomRow].mine) {
+            // Set the corresponding tile object's mine property to true
+            board[randomCol][randomRow].mine = true
+            // Put the mine image inside the HTML div
+            board[randomCol][randomRow].div.appendChild(mineImg.cloneNode(true))
+            // While loop to repeat until the mine cap has been filled
+            minesRemaining--
+        }
     }
 }
 
@@ -193,9 +190,35 @@ function handleClick(event) {
     }
 }
 
+// Counts the adjacent number of mines for a clicked tile
 function countAdjacent(col, row) {
-    return Math.floor(Math.random() * 9)
-    // Code to count the adjacent number of mines for a given tile
+    // Store the number of mines found outside the loop to be returned later
+    let adjacentMineCount = 0
+    // Loop over each column from W to E
+    let colOffset = -1
+    for (let i = 0; i < 3; i++) {
+        let rowOffset = -1
+        // Only run if the column index is valid
+        if ((col + colOffset) > -1){
+            // Loop over each tile in each column from N to S
+            for (let i = 0; i < 3; i++) {
+                // Only run if the row index is valid
+                if ((row + rowOffset) > -1) {
+                    // If the checked tile has a mine, increase the count
+                    if (board[col + colOffset][row + rowOffset].mine === true) {
+                        adjacentMineCount++
+                        console.log(`A mine was found at offset ${colOffset}, ${rowOffset}. Mine count:`, adjacentMineCount)
+                    }
+                }
+                // Increment the offset to check the next tile
+                rowOffset++
+            }
+        }
+        // Increment the offset after each tile in the column is checked to check the next row
+        colOffset++
+    }
+    // Return the total
+    return adjacentMineCount
 }
 
 function checkWinner() {
