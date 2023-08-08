@@ -102,14 +102,32 @@ function createTiles() {
     boardEl.style.gridTemplateRows = `repeat(${boardSize}, 1fr)`
     boardEl.style.gridTemplateColumns = `repeat(${boardSize}, 1fr)`
 }
-
+// Randomly places mines based on board size
+// Should only be called on game start
 function placeMines() {
-    // Code that randomly places mines based on board size
+    
+    //Track the number of mines remaining
+    let minesRemaining = numOfMines
     // Check that the maximum number of mines hasn't been placed
+    while (minesRemaining > 0) {
     // Randomly choose a tile
+    let randomCol = Math.floor(Math.random() * boardSize)
+    let randomRow = Math.floor(Math.random() * boardSize)
     // Check that the chosen tile doesn't have a mine already
-    // Set the corresponding tile object's mine property to true
-    // While loop to repeat until the mine cap has been filled
+    if (!board[randomCol][randomRow].mine) {
+        // Set the corresponding tile object's mine property to true
+        board[randomCol][randomRow].mine = true
+        // While loop to repeat until the mine cap has been filled
+        minesRemaining--
+
+        // console.log("placeMines ran and the selected object is", board[randomCol][randomRow])
+        // console.log("minesRemaining is now", minesRemaining)
+    }
+    // else {
+    //     console.log("placeMines selected an object that already had a mine", board[randomCol][randomRow])
+    //     console.log("minesRemaining is still", minesRemaining)
+    // }
+    }
 }
 
 function cascade(col, row) {
@@ -128,6 +146,15 @@ function renderMessage() {
     }
 }
 
+// Displays the images for all the mines on a loss
+// Only runs when winState === "l"
+function renderMines() {
+    if (winState === "l") {
+        console.log("Game ends in a loss. winState is", winState)
+        // nested for loop changing the mine images display from hidden to visible in CSS
+    }
+}
+
 function renderButton() {
     // Code for hiding the buttons while the game is active
     // Buttons should be hidden as long as winState is null
@@ -135,6 +162,7 @@ function renderButton() {
 
 function render() {
     renderMessage()
+    renderMines()
     renderButton()
 }
 
