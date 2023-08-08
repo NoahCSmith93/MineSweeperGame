@@ -144,10 +144,9 @@ function cascade(col, row) {
                     const currentTile = board[col + colOffset][row + rowOffset]
                     if (currentTile.mine === false) {
                         currentTile.unhide()
-                        if (countAdjacent(col + colOffset, row + rowOffset)) {
+                        if (countAdjacent(currentTile.col, currentTile.row)) {
                             currentTile.div.innerText = countAdjacent(currentTile.col, currentTile.row)
-                        } else {
-                            cascade(currentTile.col, currentTile.row)
+                            // cascade(currentTile.col, currentTile.row)
                         }
                     }
                 }
