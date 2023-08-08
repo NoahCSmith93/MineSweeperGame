@@ -127,8 +127,37 @@ function placeMines() {
     }
 }
 
+// When an empty (adjacentMines value of 0) tile is clicked it should cascade to surrounding tiles
+// All non-mine tiles should be revealed
+// cascade should be called again on any additional empty tiles
 function cascade(col, row) {
-    // Code to cascade empty tiles
+    let colOffset = -1
+    // Loop over each column from W to E
+    for (let i = 0; i < 3; i++) {
+        let rowOffset = -1
+        // Only run if the column index is valid
+        if ((col + colOffset) > -1){
+            // Loop over each tile in each column from N to S
+            for (let i = 0; i < 3; i++) {
+                // Only run if the row index is valid
+                if ((row + rowOffset) > -1) {
+                    const currentTile = board[col + colOffset][row + rowOffset]
+                    if (currentTile.mine === false) {
+                        currentTile.unhide()
+                        if (countAdjacent(col + colOffset, row + rowOffset)) {
+                            currentTile.div.innerText = countAdjacent(currentTile.col, currentTile.row)
+                        } else {
+                            cascade(currentTile.col, currentTile.row)
+                        }
+                    }
+                }
+                // Increment the offset to check the next tile
+                rowOffset++
+            }
+        }
+        // Increment the offset after each tile in the column is checked to check the next row
+        colOffset++
+    }
 }
 
 function renderMessage() {
@@ -207,7 +236,6 @@ function countAdjacent(col, row) {
                     // If the checked tile has a mine, increase the count
                     if (board[col + colOffset][row + rowOffset].mine === true) {
                         adjacentMineCount++
-                        console.log(`A mine was found at offset ${colOffset}, ${rowOffset}. Mine count:`, adjacentMineCount)
                     }
                 }
                 // Increment the offset to check the next tile
