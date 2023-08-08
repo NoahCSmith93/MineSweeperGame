@@ -34,6 +34,7 @@ class Tiles {
         this.div.classList.add("hidden")
     }
     unhide() {
+        if (this.hidden === true) hiddenTileCounter--
         this.hidden = false
         this.div.classList.remove("hidden")
         this.div.classList.add("unhidden")
@@ -46,20 +47,24 @@ let winState
 let boardSize = 16
 let numOfMines
 let board
+let hiddenTileCounter
 
 /* ---- Cached Elements ----*/
 
 const boardEl = document.getElementById("board")
 const messageEl = document.getElementById("message")
 const controlsEl = document.getElementById("controls")
+const buttonsEl = document.getElementById("difficulty")
 const mineImg = document.createElement("img")
 mineImg.src = "/Images/Mine.png"
+mineImg.style.display = "none"
 
 /* ---- Functions ----- */
 
 function init() {
     board = []
     boardEl.innerHTML = ""
+    hiddenTileCounter = boardSize * boardSize
     createTiles()
     placeMines()
     render()
@@ -184,14 +189,31 @@ function renderMessage() {
 // Only runs when winState === "l"
 function renderMines() {
     if (winState === "l") {
-        console.log("Game ends in a loss. winState is", winState)
         // nested for loop changing the mine images display from hidden to visible in CSS
+        board.forEach(column => {
+            column.forEach(tile => {
+                if (tile.mine === true) {
+                    tile.div.querySelector("img").style.display = ""
+                }
+            })
+        })
+        // Stop the remaining hidden tiles from appearing clickable
+        board.forEach(column => {
+            column.forEach(tile => {
+                tile.div.classList.remove("hidden")
+            })
+        })
     }
 }
 
+// Hides the buttons while the game is active
 function renderButton() {
-    // Code for hiding the buttons while the game is active
     // Buttons should be hidden as long as winState is null
+    if (winState === null) {
+        buttonsEl.style.display = "none"
+    } else {
+        buttonsEl.style.display = ""
+    }
 }
 
 function render() {
@@ -257,8 +279,11 @@ function countAdjacent(col, row) {
     return adjacentMineCount
 }
 
+// Checks if all non-mine tiles have been revealed
 function checkWinner() {
-    // Code to check if all non-mine tiles have been revealed
+    // hiddenTileCounter is decremented each time a tile's unhide() method is called
+    // When the # of hidden tiles === the # of mines then only mines are left and the game is won
+    if (hiddenTileCounter === numOfMines) winState = "w"
 }
 
 /* ---- Event Listeners ----- */
