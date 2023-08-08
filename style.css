@@ -49,6 +49,15 @@ header {
     background-color: #c2c2c2;
     border: 0.4vmin solid #999999;
     margin: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#board>div>img {
+    max-width: 80%;
+    max-height: 80%;
+    margin: auto;
 }
 
 #board>.hidden:hover {
