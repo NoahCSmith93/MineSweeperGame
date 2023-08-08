@@ -198,11 +198,7 @@ function renderMines() {
             })
         })
         // Stop the remaining hidden tiles from appearing clickable
-        board.forEach(column => {
-            column.forEach(tile => {
-                tile.div.classList.remove("hidden")
-            })
-        })
+        forceUnclickable()
     }
 }
 
@@ -283,7 +279,18 @@ function countAdjacent(col, row) {
 function checkWinner() {
     // hiddenTileCounter is decremented each time a tile's unhide() method is called
     // When the # of hidden tiles === the # of mines then only mines are left and the game is won
-    if (hiddenTileCounter === numOfMines) winState = "w"
+    if (hiddenTileCounter === numOfMines) {
+        winState = "w"
+        forceUnclickable()
+    }
+}
+
+function forceUnclickable() {
+    board.forEach(column => {
+        column.forEach(tile => {
+            tile.div.classList.remove("hidden")
+        })
+    })
 }
 
 /* ---- Event Listeners ----- */
