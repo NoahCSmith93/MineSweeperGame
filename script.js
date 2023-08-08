@@ -131,23 +131,29 @@ function placeMines() {
 // All non-mine tiles should be revealed
 // cascade should be called again on any additional empty tiles
 function cascade(col, row) {
+    // Track the empty tiles revealed to iterate over for recursion
+    const revealedEmptyTiles = []
     let colOffset = -1
     // Loop over each column from W to E
     for (let i = 0; i < 3; i++) {
         let rowOffset = -1
         // Only run if the column index is valid
-        if ((col + colOffset) > -1){
+        if ((col + colOffset) > -1 && (col + colOffset) < board.length){
             // Loop over each tile in each column from N to S
             for (let i = 0; i < 3; i++) {
                 // Only run if the row index is valid
-                if ((row + rowOffset) > -1) {
+                if ((row + rowOffset) > -1 && (row + rowOffset) < board.length) {
                     const currentTile = board[col + colOffset][row + rowOffset]
+                    // Only reveal the tile if it does not have a mine
                     if (currentTile.mine === false) {
-                        currentTile.unhide()
+                        // Update innerText for revealed tiles that have mines adjacent
+                        // Prevent infinite recursion by only tracking newly revealed empty tiles
                         if (countAdjacent(currentTile.col, currentTile.row)) {
                             currentTile.div.innerText = countAdjacent(currentTile.col, currentTile.row)
-                            // cascade(currentTile.col, currentTile.row)
-                        }
+                        } else if (currentTile.hidden === true) {
+                                revealedEmptyTiles.push(currentTile)
+                            }
+                        currentTile.unhide()
                     }
                 }
                 // Increment the offset to check the next tile
@@ -157,6 +163,9 @@ function cascade(col, row) {
         // Increment the offset after each tile in the column is checked to check the next row
         colOffset++
     }
+    revealedEmptyTiles.forEach(tile => {
+        cascade(tile.col, tile.row)
+    })
 }
 
 function renderMessage() {
@@ -227,11 +236,11 @@ function countAdjacent(col, row) {
     for (let i = 0; i < 3; i++) {
         let rowOffset = -1
         // Only run if the column index is valid
-        if ((col + colOffset) > -1){
+        if ((col + colOffset) > -1 && (col + colOffset) < board.length){
             // Loop over each tile in each column from N to S
             for (let i = 0; i < 3; i++) {
                 // Only run if the row index is valid
-                if ((row + rowOffset) > -1) {
+                if ((row + rowOffset) > -1 && (row + rowOffset) < board.length) {
                     // If the checked tile has a mine, increase the count
                     if (board[col + colOffset][row + rowOffset].mine === true) {
                         adjacentMineCount++
