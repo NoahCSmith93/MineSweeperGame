@@ -1,23 +1,3 @@
-// Psuedocode 
-
-// Initialize the board to a fresh state
-// Generate random values for each tile, including setting mine locations
-    // each tile should have two simultaneous states
-    // one state will determine its value, either blank (0), a mine, or the number of adjacent mines
-    // the other state will determine its display state, either hidden or revealed
-
-// Handle the player clicking on a tile
-    // Determine if the tile is a mine or not
-    // Reveal the tile
-    // Reveal the surrounding tiles with a value of 0
-    // Reveal the edge tiles with non-mine value
-
-// Check for a win or loss
-    // if the last clicked tile was a mine, return a loss
-    // if there are only mine tiles left covered, return a win
-
-// Allow the player to play again with a button
-
 /* ---- Classes ----- */
 
 // Class for creating object tiles
@@ -48,6 +28,7 @@ let boardSize = 16
 let numOfMines
 let board
 let hiddenTileCounter
+let mineArr
 
 /* ---- Cached Elements ----*/
 
@@ -57,12 +38,15 @@ const controlsEl = document.getElementById("controls")
 const buttonsEl = document.getElementById("difficulty")
 const mineImg = document.createElement("img")
 mineImg.src = "/Images/Mine.png"
-mineImg.style.display = "none"
+// mineImg.style.display = "none"
+const flagImg = document.createElement("img")
+flagImg.src = "/Images/Flag.png"
 
 /* ---- Functions ----- */
 
 function init() {
     board = []
+    mineArr = []
     boardEl.innerHTML = ""
     hiddenTileCounter = boardSize * boardSize
     createTiles()
@@ -125,7 +109,7 @@ function placeMines() {
             // Set the corresponding tile object's mine property to true
             board[randomCol][randomRow].mine = true
             // Put the mine image inside the HTML div
-            board[randomCol][randomRow].div.appendChild(mineImg.cloneNode(true))
+            mineArr.push(board[randomCol][randomRow].div)
             // While loop to repeat until the mine cap has been filled
             minesRemaining--
         }
@@ -189,13 +173,10 @@ function renderMessage() {
 // Only runs when winState === "l"
 function renderMines() {
     if (winState === "l") {
-        // nested for loop changing the mine images display from hidden to visible in CSS
-        board.forEach(column => {
-            column.forEach(tile => {
-                if (tile.mine === true) {
-                    tile.div.querySelector("img").style.display = ""
-                }
-            })
+        // Iterate through the array containing all the divs with mines
+        mineArr.forEach(mine => {
+            // Append the mine image inside each mine div
+            mine.appendChild(mineImg.cloneNode(true))
         })
         // Stop the remaining hidden tiles from appearing clickable
         forceUnclickable()
@@ -293,10 +274,34 @@ function forceUnclickable() {
     })
 }
 
+function changeFlag(event) {
+    // Stop default context menu from appearing
+    event.preventDefault()
+    // Variable to store the div that was right clicked
+    let clickedDiv
+    // If statement that sets clickedDiv to the proper div even if the click happened on an image
+    // Also returns if the click did not happen on a div or img
+    if (event.target.tagName === "IMG") {
+        clickedDiv = event.target.closest("div")
+    } else if (event.target.tagName === "DIV") {
+        clickedDiv = event.target
+    } else return
+    console.log(clickedDiv)
+    // Return if the tile has already been revealed
+    if (clickedDiv.classList.contains("unhidden")) return
+    // If statement that adds the flag if there isn't one and removes it if there is
+    if (clickedDiv.innerHTML) {
+        clickedDiv.innerHTML = ""
+    } else {
+        clickedDiv.appendChild(flagImg.cloneNode(true))
+    }
+}
+
 /* ---- Event Listeners ----- */
 
 boardEl.addEventListener("click", handleClick)
 controlsEl.addEventListener("click", startGame)
+boardEl.addEventListener("contextmenu", changeFlag)
 
 
 
