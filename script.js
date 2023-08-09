@@ -29,6 +29,8 @@ let numOfMines
 let board
 let hiddenTileCounter
 let mineArr
+let flagsPlaced
+let flaggedMines
 
 /* ---- Cached Elements ----*/
 
@@ -47,6 +49,8 @@ flagImg.src = "/Images/Flag.png"
 function init() {
     board = []
     mineArr = []
+    flagsPlaced = 0
+    flaggedMines = 0
     boardEl.innerHTML = ""
     hiddenTileCounter = boardSize * boardSize
     createTiles()
@@ -272,6 +276,9 @@ function checkWinner() {
     if (hiddenTileCounter === numOfMines) {
         winState = "w"
         forceUnclickable()
+    } else if (flaggedMines === numOfMines && flaggedMines === flagsPlaced) {
+        winState = "w"
+        forceUnclickable()
     }
 }
 
@@ -302,8 +309,13 @@ function changeFlag(event) {
     // If statement that adds the flag if there isn't one and removes it if there is
     if (clickedDiv.innerHTML) {
         clickedDiv.innerHTML = ""
+        flagsPlaced--
     } else {
         clickedDiv.appendChild(flagImg.cloneNode(true))
+        flagsPlaced++
+    }
+    if (mineArr.contains(clickedDiv)) {
+        flaggedMines++
     }
 }
 
