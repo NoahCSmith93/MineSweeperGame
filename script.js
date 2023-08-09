@@ -200,12 +200,21 @@ function render() {
 }
 
 function handleClick(event) {
+    // Variable to store the div that was right clicked
+    let clickedDiv
+    // If statement that sets clickedDiv to the proper div even if the click happened on an image
+    // Also returns if the click did not happen on a div or img
+    if (event.target.tagName === "IMG") {
+        clickedDiv = event.target.closest("div")
+    } else if (event.target.tagName === "DIV") {
+        clickedDiv = event.target
+    } else return
     // Do not respond to a click unless the game is active
     if (winState === null) {
         // Find the column array containing the event target
-        const clickedCol = board.find(column => column.find(tile => tile.div === event.target))
+        const clickedCol = board.find(column => column.find(tile => tile.div === clickedDiv))
         // Find the event target within the found array
-        const clickedTile = clickedCol.find(tile => tile.div ===  event.target)
+        const clickedTile = clickedCol.find(tile => tile.div === clickedDiv)
         // Check if the tile is a mine, and return with a loss if it is
         if (clickedTile.mine === true) {
             winState = "l"
@@ -277,6 +286,8 @@ function forceUnclickable() {
 function changeFlag(event) {
     // Stop default context menu from appearing
     event.preventDefault()
+    // Don't allow flag placement if the game is over
+    if (winState) return
     // Variable to store the div that was right clicked
     let clickedDiv
     // If statement that sets clickedDiv to the proper div even if the click happened on an image
