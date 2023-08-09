@@ -314,7 +314,7 @@ function changeFlag(event) {
         clickedDiv.appendChild(flagImg.cloneNode(true))
         flagsPlaced++
     }
-    if (mineArr.contains(clickedDiv)) {
+    if (mineArr.includes(clickedDiv)) {
         flaggedMines++
     }
 }
