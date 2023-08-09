@@ -286,7 +286,6 @@ function changeFlag(event) {
     } else if (event.target.tagName === "DIV") {
         clickedDiv = event.target
     } else return
-    console.log(clickedDiv)
     // Return if the tile has already been revealed
     if (clickedDiv.classList.contains("unhidden")) return
     // If statement that adds the flag if there isn't one and removes it if there is
