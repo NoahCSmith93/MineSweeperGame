@@ -307,6 +307,8 @@ function changeFlag(event) {
         clickedDiv = event.target.closest("div")
     } else if (event.target.tagName === "DIV") {
         clickedDiv = event.target
+        // Prevent an error that would turn the whole board into one flagged tile if an intersection was right clicked
+        if (clickedDiv.id === "board") return
     } else return
     // Return if the tile has already been revealed
     if (clickedDiv.classList.contains("unhidden")) return
@@ -321,6 +323,8 @@ function changeFlag(event) {
     if (mineArr.includes(clickedDiv)) {
         flaggedMines++
     }
+    checkWinner()
+    render()
 }
 
 function restart(event) {
