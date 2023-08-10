@@ -36,12 +36,10 @@ let flaggedMines
 
 const boardEl = document.getElementById("board")
 const messageEl = document.getElementById("message")
-const controlsEl = document.getElementById("controls")
 const buttonsEl = document.getElementById("difficulty")
 const mineImg = document.createElement("img")
 mineImg.src = "Images/Mine.png"
 mineImg.src = "Images/Mine.png"
-// mineImg.style.display = "none"
 const flagImg = document.createElement("img")
 flagImg.src = "Images/Flag.png"
 const restartEl = document.getElementById("restart")
