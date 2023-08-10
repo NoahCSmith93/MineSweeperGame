@@ -8,6 +8,7 @@ body {
     align-items: center;
     height: 100vh;
     background-color: #596781;
+    font-family: 'Open Sans', sans-serif;
 }
 
 header {
@@ -36,6 +37,7 @@ header {
     width: 85vmin;
     height: 85vmin;
     border-radius: 1%;
+    font-size: 150%;
 }
 
 #board {
@@ -74,4 +76,29 @@ header {
 #board>.hidden:hover {
     background-color: #cfcfcf;
     border: 0.4vmin solid #596781;
+}
+
+.mine8 {
+    color: violet;
+}
+.mine7 {
+    color: purple;
+}
+.mine6 {
+    color: red;
+}
+.mine5 {
+    color: orange;
+}
+.mine4 {
+    color: #e3d409;
+}
+.mine3 {
+    color: green;
+}
+.mine2 {
+    color: springgreen;
+}
+.mine1 {
+    color: dodgerblue;
 }

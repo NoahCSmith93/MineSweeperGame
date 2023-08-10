@@ -139,10 +139,12 @@ function cascade(col, row) {
                     const currentTile = board[col + colOffset][row + rowOffset]
                     // Only reveal the tile if it does not have a mine
                     if (currentTile.mine === false) {
+                        currentTile.adjacentMines = countAdjacent(currentTile.col, currentTile.row)
                         // Update innerText for revealed tiles that have mines adjacent
                         // Prevent infinite recursion by only tracking newly revealed empty tiles
-                        if (countAdjacent(currentTile.col, currentTile.row)) {
-                            currentTile.div.innerText = countAdjacent(currentTile.col, currentTile.row)
+                        if (currentTile.adjacentMines) {
+                            currentTile.div.innerText = currentTile.adjacentMines
+                            currentTile.div.classList.add(`mine${currentTile.adjacentMines}`)
                         } else if (currentTile.hidden === true) {
                                 revealedEmptyTiles.push(currentTile)
                             }
@@ -165,7 +167,7 @@ function renderMessage() {
     // Message should change to show the number of mines remaining while winState is null
     // Message should change to a win message on win and a loss message on loss
     if (winState === null) {
-        messageEl.innerText = `Mines: ${numOfMines}`
+        messageEl.innerText = "Mines: " + (numOfMines - flagsPlaced)
     } else if (winState === "w") {
         messageEl.innerText = "You won! Play again?"
     } else if (winState === "l") {
@@ -226,6 +228,7 @@ function handleClick(event) {
         // Check if the tile is a mine, and return with a loss if it is
         if (clickedTile.mine === true) {
             winState = "l"
+            clickedTile.div.style.backgroundColor = "red"
             render()
             return
         }
@@ -234,7 +237,10 @@ function handleClick(event) {
         // Count the adjacent mines and assign them to the object
         clickedTile.adjacentMines = countAdjacent(clickedTile.col, clickedTile.row)
         // Display the # of adjacent mines as inner text if it's more than 0
-        if (clickedTile.adjacentMines) clickedTile.div.innerText = `${clickedTile.adjacentMines}`
+        if (clickedTile.adjacentMines) {
+            clickedTile.div.innerText = `${clickedTile.adjacentMines}`
+            clickedTile.div.classList.add(`mine${clickedTile.adjacentMines}`)
+        }
         // Otherwise cascade
         else cascade(clickedTile.col, clickedTile.row)
         // Check for winner after the click is handled, then update the board
