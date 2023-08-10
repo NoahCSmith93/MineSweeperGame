@@ -39,10 +39,11 @@ const messageEl = document.getElementById("message")
 const controlsEl = document.getElementById("controls")
 const buttonsEl = document.getElementById("difficulty")
 const mineImg = document.createElement("img")
-mineImg.src = "/Images/Mine.png"
+mineImg.src = "Images/Mine.png"
 // mineImg.style.display = "none"
 const flagImg = document.createElement("img")
-flagImg.src = "/Images/Flag.png"
+flagImg.src = "Images/Flag.png"
+const restartEl = document.getElementById("restart")
 
 /* ---- Functions ----- */
 
@@ -170,6 +171,8 @@ function renderMessage() {
         messageEl.innerText = "You won! Play again?"
     } else if (winState === "l") {
         messageEl.innerText = "You lost! Play again?"
+    } else {
+        messageEl.innerText = "Choose your difficulty:"
     }
 }
 
@@ -192,8 +195,10 @@ function renderButton() {
     // Buttons should be hidden as long as winState is null
     if (winState === null) {
         buttonsEl.style.display = "none"
+        restartEl.classList.remove("hidden")
     } else {
         buttonsEl.style.display = ""
+        restartEl.classList.add("hidden")
     }
 }
 
@@ -319,11 +324,18 @@ function changeFlag(event) {
     }
 }
 
+function restart(event) {
+    if (event.target.tagName !== "BUTTON") return
+    winState = "restart"
+    init()
+}
+
 /* ---- Event Listeners ----- */
 
 boardEl.addEventListener("click", handleClick)
-controlsEl.addEventListener("click", startGame)
+buttonsEl.addEventListener("click", startGame)
 boardEl.addEventListener("contextmenu", changeFlag)
+restartEl.addEventListener("click", restart)
 
 
 

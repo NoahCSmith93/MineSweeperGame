@@ -26,6 +26,10 @@ header {
     margin-bottom: 2vmin;
 }
 
+#controls>.hidden {
+    display: none;
+}
+
 #game {
     border: 0.5vmin solid #383838;
     background-color: #7a7a7a;
